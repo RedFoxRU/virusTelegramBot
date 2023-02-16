@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "virustelegrambot"
+version = "0.0.1"
+description = ""
+authors = ["RDFRU <mg814201@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiogram = "^2.25.1"
+peewee = "^3.15.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
