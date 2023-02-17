@@ -1,4 +1,5 @@
 import os
 
-TOKEN = os.getenv('TOKEN')
-print(TOKEN)
+TOKEN  = os.getenv('TOKEN')
+PWD    = "./"
+DBNAME = "database.db" 
