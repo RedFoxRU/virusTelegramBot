@@ -9,7 +9,11 @@ readme = "README.md"
 python = "^3.8"
 aiogram = "^2.25.1"
 peewee = "^3.15.4"
+loguru = "^0.6.0"
 
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.1"
 
 [build-system]
 requires = ["poetry-core"]
