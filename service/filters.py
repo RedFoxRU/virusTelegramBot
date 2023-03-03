@@ -8,7 +8,7 @@ class IsInfected(Filter):
 
     async def check(self, message: types.Message) -> bool:
         if not message.from_user.is_bot:
-            user = User.get_or_none(User.tgid == message.from_user.id)
+            user, _ = User.get_or_create(tgid = message.from_user.id, group=message.chat.id)
             if user:
                 return user.is_infected
             else:

@@ -1,1 +1,1 @@
-from handlers import client, shop, admin
+from handlers import client, shop, inventory,admin

@@ -13,7 +13,7 @@ async def getShop(msg: types.Message):
     inkb.add(types.InlineKeyboardButton(f'Вата на 5 раз | {prices.cotton}',callback_data=f'buy_cotton_{msg.chat.id}'))
     inkb.add(types.InlineKeyboardButton(f'Спирт 200 мл | {prices.spirit}',callback_data=f'buy_spirit_{msg.chat.id}'))
 
-    group = Group.get(Group.tgid == msg.chat.id)
+    group, _ = Group.get_or_create(tgid = msg.chat.id)
     if group.is_vaccine:
         inkb.add(types.InlineKeyboardButton(f'Вакцина | {prices.vaccine}',callback_data=f'buy_vaccine_{msg.chat.id}'))
     await msg.bot.send_message(msg.from_user.id, client.SHOP, reply_markup=inkb)
@@ -29,6 +29,7 @@ async def buyInjector(cb: types.CallbackQuery):
         inventory, _ = Inventory.get_or_create(user=user.id)
         inventory.injector += 1
         inventory.save()
+        user.save()
         await cb.message.answer(client.SUCCESS_BUY.format(item='шприц', price=prices.injector))
     else:
         await cb.message.answer(client.NOT_HAVE_MONEY)
@@ -40,9 +41,10 @@ async def buyCotton(cb: types.CallbackQuery):
     if user.money >= prices.cotton:
         user.money -= prices.cotton
         inventory, _ = Inventory.get_or_create(user=user.id)
-        inventory.cotton += 1
+        inventory.cotton += 5
         inventory.save()
-        await cb.message.answer(client.SUCCESS_BUY.format(item='шприц', price=prices.cotton))
+        user.save()
+        await cb.message.answer(client.SUCCESS_BUY.format(item='Вату', price=prices.cotton))
     else:
         await cb.message.answer(client.NOT_HAVE_MONEY)
 
@@ -53,8 +55,23 @@ async def buyspirit(cb: types.CallbackQuery):
     if user.money >= prices.spirit:
         user.money -= prices.spirit
         inventory, _ = Inventory.get_or_create(user=user.id)
-        inventory.spirit += 1
+        inventory.spirit += 200
         inventory.save()
-        await cb.message.answer(client.SUCCESS_BUY.format(item='шприц', price=prices.spirit))
+        user.save()
+        await cb.message.answer(client.SUCCESS_BUY.format(item='Спирт', price=prices.spirit))
+    else:
+        await cb.message.answer(client.NOT_HAVE_MONEY)
+
+async def buy_vaccine(cb: types.CallbackQuery):
+    groupId = cb.data.replace('buy_vaccine_', '')
+    user = User.get( (User.tgid == cb.from_user.id) & (User.group == int(groupId)) )
+    prices = Price.get_by_id(1)
+    if user.money >= prices.vaccine:
+        user.money -= prices.vaccine
+        inventory, _ = Inventory.get_or_create(user=user.id)
+        inventory.vaccine += 1
+        inventory.save()
+        user.save()
+        await cb.message.answer(client.SUCCESS_BUY.format(item='Вакцина', price=prices.vaccine))
     else:
         await cb.message.answer(client.NOT_HAVE_MONEY)
