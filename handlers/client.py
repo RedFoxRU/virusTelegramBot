@@ -123,7 +123,7 @@ async def profileHandler(msg: types.Message, state: FSMContext):
     else:
         is_infect = '✖️'
 
-    await msg.answer(templates.PROFILE.format(name=msg.from_user.full_name, is_infect=is_infect, money=user.money, infect_dt=user.infected_dt.strftime("%Y-%m-%d %H:%M:%S") if user.infected_dt != None else '✖️', chances=round(user.chances/(5000+user.chances)*100, 2)))
+    await msg.answer(templates.PROFILE.format(name=msg.from_user.full_name, is_infect=is_infect, money=user.money, infect_dt=user.infected_dt.strftime("%Y-%m-%d %H:%M:%S") if user.infected_dt != None else '✖️', chances=round(user.chances/(5000+user.chances)*100, 2), chances_mute=round(user.chances/(15000+user.chances)*100, 2)))
 
 
 @dp.message_handler(filters.ChatTypeFilter(types.ChatType.SUPERGROUP), commands=['pay'], state='*')

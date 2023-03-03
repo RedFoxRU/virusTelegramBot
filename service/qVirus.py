@@ -57,9 +57,11 @@ async def virusGen2(msg: types.Message, user: User):
 
 async def mutate(msg: types.Message, user: User):
     if random.choices([True, False], [user.chances, 15000])[0]:
-        user.gen += 1
-        user.save()
-        await msg.answer(client.MUTATE.format(name=msg.from_user.full_name))
+        if not user.try_infect or (datetime.datetime.now() - user.try_infect).seconds >= 4*60*60:
+            user.gen += 1
+            user.try_infect = datetime.datetime.now()
+            user.save()
+            await msg.answer(client.MUTATE.format(name=msg.from_user.full_name))
 
 async def vaccine_done(msg):
     group, g_ = Group.get_or_create(tgid=msg.chat.id)
